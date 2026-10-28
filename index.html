@@ -15,8 +15,10 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
         .card { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); }
         .card:hover { transform: translateY(-5px); border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(29, 78, 216, 0.3); }
-        .voice-info h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: #eff6ff; text-transform: capitalize; }
-        .commands-container { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
+        .voice-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .voice-avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--border-color); object-fit: cover; background: #0f172a; }
+        .voice-info h2 { font-size: 1.2rem; font-weight: 700; color: #eff6ff; text-transform: capitalize; }
+        .commands-container { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; width: 100%; }
         .command-box { background: rgba(30, 41, 59, 0.5); border: 1px dashed rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 0.6rem; font-family: 'Courier New', monospace; font-size: 0.85rem; color: #60a5fa; cursor: pointer; text-align: center; transition: all 0.2s ease; position: relative; }
         .command-box:hover { background: rgba(29, 78, 216, 0.2); border-color: var(--accent-blue); color: #fff; }
         .command-box::after { content: 'Click to copy'; position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-family: sans-serif; font-size: 0.65rem; color: var(--text-muted); opacity: 0; transition: opacity 0.2s ease; white-space: nowrap; }
@@ -43,38 +45,38 @@
 
     <script>
         const englishVoices = [
-            { name: "Brian", cmds: ["!brian", "!tts"], file: "brian.mp3" },
-            { name: "SpongeBob", cmds: ["!spongebob"], file: "spongebob.mp3" },
-            { name: "Squidward", cmds: ["!squidward"], file: "squidward.mp3" },
-            { name: "Plankton", cmds: ["!plankton"], file: "plankton.mp3" },
-            { name: "Bart", cmds: ["!bart"], file: "bart.mp3" },
-            { name: "Trump", cmds: ["!trump"], file: "trump.mp3" },
-            { name: "Biden", cmds: ["!biden"], file: "biden.mp3" },
-            { name: "Stormtrooper", cmds: ["!stormtrooper"], file: "stormtrooper.mp3" },
-            { name: "Zoomer", cmds: ["!zoomer"], file: "zoomer.mp3" },
-            { name: "Eminem", cmds: ["!eminem"], file: "eminem.mp3" },
-            { name: "Kanye", cmds: ["!kanye"], file: "kanye.mp3" },
-            { name: "Linus", cmds: ["!linus"], file: "linus.mp3" },
-            { name: "Sonic", cmds: ["!sonic"], file: "sonic.mp3" },
-            { name: "Kermit", cmds: ["!kermit"], file: "kermit.mp3" },
-            { name: "KKona", cmds: ["!kkona"], file: "kkona.mp3" },
-            { name: "Knuckles", cmds: ["!knuckles"], file: "knuckles.mp3" },
-            { name: "TikTok Male", cmds: ["!ttk"], file: "ttk.mp3" },
-            { name: "Pirate", cmds: ["!pirate"], file: "pirate.mp3" },
-            { name: "Chipmunk", cmds: ["!chipmunk"], file: "chipmunk.mp3" },
-            { name: "Santa", cmds: ["!santa"], file: "santa.mp3" },
-            { name: "Magician", cmds: ["!magician"], file: "magician.mp3" },
-            { name: "Stitch", cmds: ["!stitch"], file: "stitch.mp3" },
-            { name: "Cringe", cmds: ["!cringe"], file: "cringe.mp3" },
-            { name: "TikTok Female", cmds: ["!ttk2"], file: "ttk2.mp3" },
-            { name: "Weeb", cmds: ["!weeb"], file: "weeb.mp3" }
+            { name: "Brian", cmds: ["!brian", "!tts"], file: "brian.mp3", img: "brian.png" },
+            { name: "SpongeBob", cmds: ["!spongebob"], file: "spongebob.mp3", img: "spongebob.png" },
+            { name: "Squidward", cmds: ["!squidward"], file: "squidward.mp3", img: "squidward.png" },
+            { name: "Plankton", cmds: ["!plankton"], file: "plankton.mp3", img: "plankton.png" },
+            { name: "Bart", cmds: ["!bart"], file: "bart.mp3", img: "bart.png" },
+            { name: "Trump", cmds: ["!trump"], file: "trump.mp3", img: "trump.png" },
+            { name: "Biden", cmds: ["!biden"], file: "biden.mp3", img: "biden.png" },
+            { name: "Stormtrooper", cmds: ["!stormtrooper"], file: "stormtrooper.mp3", img: "stormtrooper.png" },
+            { name: "Zoomer", cmds: ["!zoomer"], file: "zoomer.mp3", img: "zoomer.png" },
+            { name: "Eminem", cmds: ["!eminem"], file: "eminem.mp3", img: "eminem.png" },
+            { name: "Kanye", cmds: ["!kanye"], file: "kanye.mp3", img: "kanye.png" },
+            { name: "Linus", cmds: ["!linus"], file: "linus.mp3", img: "linus.png" },
+            { name: "Sonic", cmds: ["!sonic"], file: "sonic.mp3", img: "sonic.png" },
+            { name: "Kermit", cmds: ["!kermit"], file: "kermit.mp3", img: "kermit.png" },
+            { name: "KKona", cmds: ["!kkona"], file: "kkona.mp3", img: "kkona.png" },
+            { name: "Knuckles", cmds: ["!knuckles"], file: "knuckles.mp3", img: "knuckles.png" },
+            { name: "TikTok Male", cmds: ["!ttk"], file: "ttk.mp3", img: "ttk.png" },
+            { name: "Pirate", cmds: ["!pirate"], file: "pirate.mp3", img: "pirate.png" },
+            { name: "Chipmunk", cmds: ["!chipmunk"], file: "chipmunk.mp3", img: "chipmunk.png" },
+            { name: "Santa", cmds: ["!santa"], file: "santa.mp3", img: "santa.png" },
+            { name: "Magician", cmds: ["!magician"], file: "magician.mp3", img: "magician.png" },
+            { name: "Stitch", cmds: ["!stitch"], file: "stitch.mp3", img: "stitch.png" },
+            { name: "Cringe", cmds: ["!cringe"], file: "cringe.mp3", img: "cringe.png" },
+            { name: "TikTok Female", cmds: ["!ttk2"], file: "ttk2.mp3", img: "ttk2.png" },
+            { name: "Weeb", cmds: ["!weeb"], file: "weeb.mp3", img: "weeb.png" }
         ];
 
         const dutchVoices = [
-            { name: "Frank", cmds: ["!frank", "!nl"], file: "frank.mp3" },
-            { name: "Maarten", cmds: ["!maarten", "!nl1"], file: "maarten.mp3" },
-            { name: "Fenna", cmds: ["!fenna", "!nl2"], file: "fenna.mp3" },
-            { name: "Colette", cmds: ["!colette", "!nl3"], file: "colette.mp3" }
+            { name: "Frank", cmds: ["!frank", "!nl"], file: "frank.mp3", img: "frank.png" },
+            { name: "Maarten", cmds: ["!maarten", "!nl1"], file: "maarten.mp3", img: "maarten.png" },
+            { name: "Fenna", cmds: ["!fenna", "!nl2"], file: "fenna.mp3", img: "fenna.png" },
+            { name: "Colette", cmds: ["!colette", "!nl3"], file: "colette.mp3", img: "colette.png" }
         ];
 
         function createCards(voices, gridId) {
@@ -86,7 +88,14 @@
                 v.cmds.forEach(c => {
                     cmdHtml += `<div class="command-box" onclick="copyCommand('${c} ')">${c} [message]</div>`;
                 });
-                card.innerHTML = `<div class="voice-info"><h2>${v.name}</h2><div class="commands-container">${cmdHtml}</div></div><audio controls><source src="audio/${v.file}" type="audio/mpeg"></audio>`;
+                card.innerHTML = `
+                    <div class="voice-header">
+                        <img class="voice-avatar" src="images/${v.img}" alt="${v.name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://w3.org\' width=\'55\' height=\'55\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2394a3b8\' stroke-width=\'2\'><circle cx=\'12\' cy=\'8\' r=\'4\'/><path d=\'M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2\'/></svg>'">
+                        <div class="voice-info"><h2>${v.name}</h2></div>
+                    </div>
+                    <div class="commands-container">${cmdHtml}</div>
+                    <audio controls><source src="audio/${v.file}" type="audio/mpeg"></audio>
+                `;
                 grid.appendChild(card);
             });
         }
