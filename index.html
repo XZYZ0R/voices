@@ -86,7 +86,8 @@
                 card.className = 'card';
                 let cmdHtml = '';
                 v.cmds.forEach(c => {
-                    cmdHtml += `<div class="command-box" onclick="copyCommand('${c} ')">${c} [message]</div>`;
+                    // Hier is [message] nu ook volledig weggehaald uit de tekst op het scherm
+                    cmdHtml += `<div class="command-box" onclick="copyCommand('${c} ')">${c}</div>`;
                 });
                 card.innerHTML = `
                     <div class="voice-header">
