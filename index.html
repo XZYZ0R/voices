@@ -90,7 +90,7 @@
                 });
                 card.innerHTML = `
                     <div class="voice-header">
-                        <img class="voice-avatar" src="images/${v.img}" alt="${v.name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://w3.org\' width=\'55\' height=\'55\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2394a3b8\' stroke-width=\'2\'><circle cx=\'12\' cy=\'8\' r=\'4\'/><path d=\'M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2\'/></svg>'">
+                        <img class="voice-avatar" src="images/${v.img}" alt="${v.name}" onerror="handleImgError(this)">
                         <div class="voice-info"><h2>${v.name}</h2></div>
                     </div>
                     <div class="commands-container">${cmdHtml}</div>
@@ -98,6 +98,11 @@
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        function handleImgError(image) {
+            image.onerror = null;
+            image.src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='55' height='55' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'><circle cx='12' cy='8' r='4'/><path d='M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2'/></svg>";
         }
 
         createCards(englishVoices, 'english-grid');
