@@ -9,28 +9,16 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background-color: var(--bg-color); background-image: radial-gradient(at 0% 0%, rgba(17, 24, 39, 0.8) 0, transparent 50%), radial-gradient(at 50% 0%, rgba(30, 58, 138, 0.3) 0, transparent 50%), radial-gradient(at 100% 0%, rgba(15, 23, 42, 0.9) 0, transparent 50%), radial-gradient(at 50% 100%, rgba(3, 7, 18, 1) 0, transparent 100%); background-attachment: fixed; color: var(--text-main); min-height: 100vh; padding: 2rem 1rem; }
         .container { max-width: 1200px; margin: 0 auto; }
-        
         header { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 2rem; }
         header h1 { font-size: 2.8rem; font-weight: 800; background: linear-gradient(to right, #93c5fd, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
         .header-logo { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent-blue); object-fit: cover; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
-        
         .info-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem; }
         .info-box { background: rgba(15, 23, 42, 0.45); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; padding: 1.25rem; font-size: 0.95rem; line-height: 1.5; color: #cbd5e1; }
         .info-box h3 { color: #93c5fd; font-size: 1.1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
         .info-box a { color: #60a5fa; text-decoration: none; font-weight: 600; border-bottom: 1px dashed #60a5fa; }
         .info-box a:hover { color: #93c5fd; border-bottom-style: solid; }
-
-        @media (max-width: 768px) {
-            .info-section { grid-template-columns: 1fr; gap: 1rem; }
-        }
-
-        @media (max-width: 600px) {
-            header { flex-direction: column; gap: 0.75rem; }
-            header h1 { font-size: 2.2rem; order: 2; }
-            .header-logo { width: 65px; height: 65px; }
-            .header-logo.right-logo { display: none; }
-        }
-
+        @media (max-width: 768px) { .info-section { grid-template-columns: 1fr; gap: 1rem; } }
+        @media (max-width: 600px) { header { flex-direction: column; gap: 0.75rem; } header h1 { font-size: 2.2rem; order: 2; } .header-logo { width: 65px; height: 65px; } .header-logo.right-logo { display: none; } }
         .section-title { font-size: 1.8rem; margin: 2.5rem 0 1.5rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color); color: #93c5fd; display: flex; align-items: center; gap: 0.5rem; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
         .card { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); }
@@ -57,7 +45,6 @@
             <h1>XZYZ0R TTS VOICES</h1>
             <img class="header-logo right-logo" src="images/logo.png" alt="Logo Right" onerror="this.style.display='none'">
         </header>
-
         <div class="info-section">
             <div class="info-box">
                 <h3>👑 Subscriber & Donation Perks</h3>
@@ -68,16 +55,12 @@
                 Due to rate limits or TTS server downtime, some voices may occasionally become unavailable. Unlimited fallback choices are <strong>!tts</strong>, <strong>!ttk</strong>, and <strong>!ttk2</strong>. Other custom voices run on a free monthly plan capped at 400 messages, which may be upgraded in the future to remove limitations.
             </div>
         </div>
-        
         <h2 class="section-title">🇬🇧 English Voices</h2>
         <div class="grid" id="english-grid"></div>
-
         <h2 class="section-title">🇳🇱 Netherlands Voices</h2>
         <div class="grid" id="dutch-grid"></div>
     </div>
-
     <div class="toast" id="toast">Command copied! 🚀</div>
-
     <script>
         const englishVoices = [
             { name: "SpongeBob", cmds: ["!spongebob"], file: "spongebob.mp3", img: "spongebob.png" },
@@ -118,29 +101,36 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 let cmdHtml = '';
-v.cmds.forEach(c => {
-cmdHtml += <div class="command-box" onclick="copyCommand('${c} ')">${c}</div>;
-});
-card.innerHTML = `
+                v.cmds.forEach(c => {
+                    cmdHtml += `<div class="command-box" onclick="copyCommand('${c} ')">${c}</div>`;
+                });
+                card.innerHTML = `
+                    <div class="voice-header">
+                        <img class="voice-avatar" src="images/${v.img}" alt="${v.name}" onerror="handleImgError(this)">
+                        <div class="voice-info"><h2>${v.name}</h2></div>
+                    </div>
+                    <div class="commands-container">${cmdHtml}</div>
+                    <audio controls><source src="audio/${v.file}" type="audio/mpeg"></audio>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
+        function handleImgError(image) {
+            image.onerror = null;
+            image.src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='55' height='55' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'><circle cx='12' cy='8' r='4'/><path d='M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2'/></svg>";
+        }
 
-${v.name}
+        createCards(englishVoices, 'english-grid');
+        createCards(dutchVoices, 'dutch-grid');
 
-${cmdHtml}
-`;
-grid.appendChild(card);
-});
-}
-function handleImgError(image) {
-image.onerror = null;
-image.src = "data:image/svg+xml;utf8,";
-}
-createCards(englishVoices, 'english-grid');
-createCards(dutchVoices, 'dutch-grid');
-function copyCommand(text) {
-navigator.clipboard.writeText(text).then(() => {
-const toast = document.getElementById('toast');
-toast.classList.add('show');
-setTimeout(() => { toast.classList.remove('show'); }, 2000);
-}).catch(err => { console.error('Error copying text: ', err); });
-}
+        function copyCommand(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 2000);
+            }).catch(err => { console.error('Error copying text: ', err); });
+        }
+    </script>
+</body>
+</html>
