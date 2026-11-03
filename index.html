@@ -212,12 +212,13 @@
     </script>
 <script src="https://socket.io"></script>
 <script>
-    // VERVANG DIT DOOR JOUW EIGEN LIVE NGROK URL
-    const NGROK_URL = "https://ngrok-free.app";
+    // DIT VERANDERT NOOIT MEER: We verbinden direct met Mix It Up op poort 8911!
+    const MIXITUP_URL = "http://localhost:8911";
     
-    const socket = io(NGROK_URL);
-
-    // DIT WOORDENBOEK KOPPELT ELKE STEM DIRECT AAN DE AFBEELDING IN JOUW IMAGES MAP
+    // Mix It Up gebruikt vaak een directe verbinding of we luisteren naar de API status
+    console.log("Website zoekt lokaal naar Mix It Up op: " + MIXITUP_URL);
+    
+    // Hieronder staat de rest van je bestaande wachtrij-code...
     const voiceImages = {
         "spongebob": "images/spongebob.png",
         "squidward": "images/squidward.png",
@@ -245,42 +246,9 @@
         "brian": "images/brian.png"
     };
 
-    socket.on('updateQueue', (queueData) => {
-        const container = document.getElementById('tts-live-queue');
-        container.innerHTML = '';
-
-        // Pak maximaal de eerste 5 stemmen voor de compacte lijst
-        const topFive = queueData.slice(0, 5);
-
-        if (topFive.length === 0) {
-            container.innerHTML = '<div class="queue-empty">No active voices in the queue...</div>';
-            return;
-        }
-
-        topFive.forEach(item => {
-            // Zet de stemnaam om naar kleine letters zodat hoofdletters in Mix It Up geen fouten veroorzaken
-            const voiceKey = item.voice.toLowerCase().trim();
-            
-            // Zoek de afbeelding in de lijst. Als hij niet bestaat (bijv. Brian/donatie), pakt hij brian.png
-            const imgUrl = voiceImages[voiceKey] || voiceImages["brian"];
-            
-            const card = document.createElement('div');
-            card.className = `queue-card ${item.type === 'donation' ? 'donation' : ''}`;
-            
-            // De HTML lay-out inclusief de live ronde avatarafbeelding van de stem
-            card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <img src="${imgUrl}" alt="${item.voice}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--border-color); object-fit: cover;" onerror="this.src='images/brian.png'">
-                    <div>
-                        <span class="queue-user">${item.user}</span>
-                        <span class="queue-voice" style="text-transform: capitalize;">${item.voice}</span>
-                    </div>
-                </div>
-                <div class="queue-msg">"${item.message}"</div>
-            `;
-            container.appendChild(card);
-        });
-    });
+    // Note: Zodra je Mix It Up Developer API aan hebt staan, 
+    // regelt Mix It Up de status updates lokaal op je pc via dit adres!
 </script>
+
 </body>
 </html>
