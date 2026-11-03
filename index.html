@@ -36,6 +36,64 @@
         audio::-webkit-media-controls-current-time-display, audio::-webkit-media-controls-time-remaining-display { color: #fff; }
         .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e3a8a; color: #fff; padding: 0.75rem 1.5rem; border-radius: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid var(--accent-blue); font-size: 0.9rem; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 1000; }
         .toast.show { transform: translateX(-50%) translateY(0); }
+		/* Live TTS Wachtlijst Styling */
+.queue-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+}
+.queue-section h3 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 1.1rem;
+}
+.queue-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.queue-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--accent-blue);
+    padding: 10px;
+    border-radius: 4px;
+}
+.queue-card.donation {
+    border-left-color: #ffb700;
+}
+.queue-user {
+    font-weight: bold;
+    color: var(--accent-blue);
+}
+.queue-card.donation .queue-user {
+    color: #ffb700;
+}
+.queue-voice {
+    font-size: 0.85rem;
+    color: #aaa;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 8px;
+}
+.queue-msg {
+    color: #fff;
+    flex-grow: 1;
+    margin: 0 15px;
+    font-size: 0.9rem;
+}
+.queue-empty {
+    color: #666;
+    font-style: italic;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 10px;
+}
     </style>
 </head>
 <body>
@@ -59,6 +117,15 @@
                 Due to rate limits or TTS server downtime, some voices may occasionally become unavailable. Unlimited fallback choices are: <strong>!tts</strong> and <strong>!ttk</strong>. For the Netherlands voice it is: <strong>!frank</strong> or <strong>!nl</strong>. Other TTS voices run on a free monthly plan capped at 400 messages, which may be upgraded in the future to remove limitations and add even more voices.
             </div>
         </div>
+		<!-- START LIVE TTS WACHTLIJST -->
+<div class="queue-section">
+    <h3>📋 Live TTS Wachtrij (Top 5)</h3>
+    <div id="tts-live-queue" class="queue-list">
+        <div class="queue-empty">Geen actieve stemmen in de wachtrij...</div>
+    </div>
+</div>
+<!-- EIND LIVE TTS WACHTLIJST -->
+
         <h2 class="section-title">🇬🇧 English Voices</h2>
         <div class="grid" id="english-grid"></div>
         <h2 class="section-title">🇳🇱 Netherlands Voices</h2>
@@ -143,5 +210,39 @@
             }).catch(err => { console.error('Error copying text: ', err); });
         }
     </script>
+	<script src="https://socket.io"></script>
+<script>
+    // VERVANG DIT DOOR JOUW EIGEN LIVE NGROK URL
+    const NGROK_URL = "https://ngrok-free.app";
+    
+    const socket = io(NGROK_URL);
+
+    socket.on('updateQueue', (queueData) => {
+        const container = document.getElementById('tts-live-queue');
+        container.innerHTML = '';
+
+        // Pak alleen de eerste 5 stemmen
+        const topFive = queueData.slice(0, 5);
+
+        if (topFive.length === 0) {
+            container.innerHTML = '<div class="queue-empty">Geen actieve stemmen in de wachtrij...</div>';
+            return;
+        }
+
+        topFive.forEach(item => {
+            const card = document.createElement('div');
+            card.className = `queue-card ${item.type === 'donation' ? 'donation' : ''}`;
+            
+            card.innerHTML = `
+                <div>
+                    <span class="queue-user">${item.user}</span>
+                    <span class="queue-voice">${item.voice}</span>
+                </div>
+                <div class="queue-msg">"${item.message}"</div>
+            `;
+            container.appendChild(card);
+        });
+    });
+</script>
 </body>
 </html>
