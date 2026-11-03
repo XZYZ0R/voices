@@ -210,18 +210,46 @@
             }).catch(err => { console.error('Error copying text: ', err); });
         }
     </script>
-	<script src="https://socket.io"></script>
+<script src="https://socket.io"></script>
 <script>
     // VERVANG DIT DOOR JOUW EIGEN LIVE NGROK URL
-    const NGROK_URL = "https://grumbling-data-mud.ngrok-free.dev";
+    const NGROK_URL = "https://ngrok-free.app";
     
     const socket = io(NGROK_URL);
+
+    // DIT WOORDENBOEK KOPPELT ELKE STEM DIRECT AAN DE AFBEELDING IN JOUW IMAGES MAP
+    const voiceImages = {
+        "spongebob": "images/spongebob.png",
+        "squidward": "images/squidward.png",
+        "plankton": "images/plankton.png",
+        "bart": "images/bart.png",
+        "trump": "images/trump.png",
+        "biden": "images/biden.png",
+        "stormtrooper": "images/stormtrooper.png",
+        "zoomer": "images/zoomer.png",
+        "eminem": "images/eminem.png",
+        "kanye": "images/kanye.png",
+        "linus": "images/linus.png",
+        "sonic": "images/sonic.png",
+        "kermit": "images/kermit.png",
+        "kkona": "images/kkona.png",
+        "knuckles": "images/knuckles.png",
+        "tts": "images/tts.png",
+        "pirate": "images/pirate.png",
+        "santa": "images/santa.png",
+        "magician": "images/magician.png",
+        "stitch": "images/stitch.png",
+        "cringe": "images/cringe.png",
+        "ttk": "images/ttk.png",
+        "weeb": "images/weeb.png",
+        "brian": "images/brian.png"
+    };
 
     socket.on('updateQueue', (queueData) => {
         const container = document.getElementById('tts-live-queue');
         container.innerHTML = '';
 
-        // Pak alleen de eerste 5 stemmen
+        // Pak maximaal de eerste 5 stemmen voor de compacte lijst
         const topFive = queueData.slice(0, 5);
 
         if (topFive.length === 0) {
@@ -230,13 +258,23 @@
         }
 
         topFive.forEach(item => {
+            // Zet de stemnaam om naar kleine letters zodat hoofdletters in Mix It Up geen fouten veroorzaken
+            const voiceKey = item.voice.toLowerCase().trim();
+            
+            // Zoek de afbeelding in de lijst. Als hij niet bestaat (bijv. Brian/donatie), pakt hij brian.png
+            const imgUrl = voiceImages[voiceKey] || voiceImages["brian"];
+            
             const card = document.createElement('div');
             card.className = `queue-card ${item.type === 'donation' ? 'donation' : ''}`;
             
+            // De HTML lay-out inclusief de live ronde avatarafbeelding van de stem
             card.innerHTML = `
-                <div>
-                    <span class="queue-user">${item.user}</span>
-                    <span class="queue-voice">${item.voice}</span>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <img src="${imgUrl}" alt="${item.voice}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--border-color); object-fit: cover;" onerror="this.src='images/brian.png'">
+                    <div>
+                        <span class="queue-user">${item.user}</span>
+                        <span class="queue-voice" style="text-transform: capitalize;">${item.voice}</span>
+                    </div>
                 </div>
                 <div class="queue-msg">"${item.message}"</div>
             `;
