@@ -119,7 +119,7 @@
         </div>
 		<!-- START LIVE TTS WACHTLIJST -->
 <div class="queue-section">
-    <h3>📋 Live TTS Wachtrij (Top 5)</h3>
+    <h3>📋 Live TTS Queue (Top 5)</h3>
     <div id="tts-live-queue" class="queue-list">
         <div class="queue-empty">Geen actieve stemmen in de wachtrij...</div>
     </div>
@@ -213,7 +213,7 @@
 	<script src="https://socket.io"></script>
 <script>
     // VERVANG DIT DOOR JOUW EIGEN LIVE NGROK URL
-    const NGROK_URL = "https://ngrok-free.app";
+    const NGROK_URL = "https://grumbling-data-mud.ngrok-free.dev";
     
     const socket = io(NGROK_URL);
 
@@ -225,7 +225,7 @@
         const topFive = queueData.slice(0, 5);
 
         if (topFive.length === 0) {
-            container.innerHTML = '<div class="queue-empty">Geen actieve stemmen in de wachtrij...</div>';
+            container.innerHTML = '<div class="queue-empty">No active voices in the queue...</div>';
             return;
         }
 
